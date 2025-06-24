@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>希望笨比叶舒贝天天开心</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #ffafbd, #ffc3a0, #ffd8cb, #ffafbd);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            color: #5a2b4d;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 10px;
+            margin-left: 1000px;
+            z-index: 10;
+            position: relative;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.7);
+            background: linear-gradient(45deg, #e84393, #fd79a8, #e84393);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            position: relative;
+            animation: shine 3s infinite;
+        }
+
+        .header h1::after {
+            content: "🌸";
+            position: absolute;
+            right: -40px;
+            top: -10px;
+            font-size: 2rem;
+            animation: float 3s infinite ease-in-out;
+        }
+
+        .header h1::before {
+            content: "🌸";
+            position: absolute;
+            left: -40px;
+            bottom: -10px;
+            font-size: 2rem;
+            animation: float 4s infinite ease-in-out;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+            color: #5a2b4d;
+            font-weight: 500;
+        }
+
+        .container {
+            position: relative;
+            width: 100%;
+            max-width: 1200px;
+            height: 70vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 5;
+        }
+
+        .gallery-container {
+            width: 100%;
+            height: 100%;
+            perspective: 2000px;
+        }
+
+        .photo-sphere {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            margin: 0 auto;
+            transform-style: preserve-3d;
+            transition: transform 0.8s ease;
+            transform: rotateX(-10deg);
+        }
+
+        .photo {
+            position: absolute;
+            width: 150px;
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2), 0 0 30px rgba(232, 67, 147, 0.3);
+            cursor: pointer;
+            transition: all 0.5s ease;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            transform-origin: center;
+            overflow: hidden;
+        }
+
+        .photo:hover {
+            transform: scale(1.15);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3), 0 0 40px rgba(232, 67, 147, 0.5);
+            border-color: rgba(255, 255, 255, 0.7);
+            z-index: 10;
+        }
+
+        .photo .heart-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .photo:hover .heart-overlay {
+            opacity: 1;
+        }
+
+        .photo .heart-icon {
+            font-size: 2.5rem;
+            color: #e84393;
+            animation: heartbeat 1.2s infinite;
+            text-shadow: 0 0 15px rgba(232, 67, 147, 0.8);
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+            z-index: 10;
+            flex-wrap: wrap;
+        }
+
+        .control-btn {
+            background: rgba(255, 255, 255, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            color: #5a2b4d;
+            padding: 12px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .control-btn::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: 0.5s;
+        }
+
+        .control-btn:hover::before {
+            left: 100%;
+        }
+
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.5);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .control-btn i {
+            margin-right: 8px;
+            color: #e84393;
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        .modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 50px rgba(232, 67, 147, 0.5);
+            transform: scale(0.8);
+            transition: transform 0.4s ease;
+        }
+
+        .modal.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-img {
+            max-width: 100%;
+            max-height: 80vh;
+            display: block;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 2rem;
+            color: white;
+            cursor: pointer;
+            background: rgba(0, 0, 0, 0.5);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+            z-index: 1001;
+        }
+
+        .close-btn:hover {
+            transform: rotate(90deg);
+            background: rgba(232, 67, 147, 0.7);
+            box-shadow: 0 0 20px rgba(232, 67, 147, 0.7);
+        }
+
+        .instructions {
+            margin-top: 20px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.3);
+            padding: 15px;
+            border-radius: 10px;
+            max-width: 600px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #5a2b4d;
+            font-weight: 500;
+        }
+
+        .instructions p {
+            margin: 8px 0;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .instructions i {
+            margin: 0 10px;
+            color: #e84393;
+            font-size: 1.2rem;
+        }
+
+        .heart {
+            color: #e84393;
+            margin: 0 5px;
+            animation: heartbeat 1.2s infinite;
+        }
+
+        .cherry-blossom {
+            color: #e84393;
+            margin: 0 5px;
+            animation: float 6s infinite ease-in-out;
+        }
+
+        @keyframes shine {
+            0% { background-position: -500px; }
+            100% { background-position: 500px; }
+        }
+
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            25% { transform: scale(1.1); }
+            50% { transform: scale(1); }
+            75% { transform: scale(1.15); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) translateX(0) rotate(0deg); }
+            50% { transform: translateY(-20px) translateX(10px) rotate(10deg); }
+            100% { transform: translateY(0) translateX(0) rotate(0deg); }
+        }
+
+        @keyframes floatDown {
+            0% { transform: translateY(-100px) translateX(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 0.7; }
+            100% { transform: translateY(100vh) translateX(100px) rotate(360deg); opacity: 0; }
+        }
+
+        @keyframes floatDown2 {
+            0% { transform: translateY(-100px) translateX(100px) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 0.7; }
+            100% { transform: translateY(100vh) translateX(-100px) rotate(-360deg); opacity: 0; }
+        }
+
+        @keyframes floatDown3 {
+            0% { transform: translateY(-100px) translateX(-100px) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 0.7; }
+            100% { transform: translateY(100vh) translateX(0) rotate(180deg); opacity: 0; }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .header h1::after, 
+            .header h1::before {
+                display: none;
+            }
+            
+            .container {
+                height: 60vh;
+            }
+            
+            .photo-sphere {
+                transform: scale(0.8) rotateX(-10deg);
+            }
+            
+            .photo {
+                width: 120px;
+                height: 160px;
+            }
+            
+            .controls {
+                gap: 10px;
+            }
+            
+            .control-btn {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* 樱花飘落背景 */
+        .cherry-blossoms {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .petal {
+            position: absolute;
+            font-size: 24px;
+            opacity: 0;
+            animation-timing-function: ease-in-out;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
+            z-index: 1;
+        }
+
+        .petal:nth-child(4n) {
+            color: #ffc6d9;
+        }
+        .petal:nth-child(4n+1) {
+            color: #ffb0c5;
+        }
+        .petal:nth-child(4n+2) {
+            color: #ff9eb8;
+        }
+        .petal:nth-child(4n+3) {
+            color: #ff8cab;
+        }
+
+        /* 照片点赞爱心动画 */
+        .like-heart {
+            position: absolute;
+            color: #e84393;
+            font-size: 24px;
+            pointer-events: none;
+            opacity: 1;
+            animation: like-animation 1.2s ease-out;
+            text-shadow: 0 0 15px rgba(232, 67, 147, 0.9);
+            z-index: 100;
+        }
+
+        @keyframes like-animation {
+            0% { transform: scale(0); opacity: 0; }
+            20% { transform: scale(1.5); opacity: 1; }
+            40% { transform: scale(1); }
+            60% { transform: scale(1.3); }
+            80% { transform: scale(1); }
+            100% { transform: translateY(-100px) scale(0.5); opacity: 0; }
+        }
+
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 0.9rem;
+            opacity: 0.7;
+            z-index: 10;
+            color: #5a2b4d;
+            background: rgba(255, 255, 255, 0.3);
+            padding: 10px 20px;
+            border-radius: 20px;
+            backdrop-filter: blur(5px);
+        }
+    </style>
+</head>
+<body>
+    <div class="cherry-blossoms" id="cherryBlossoms"></div>
+    
+    <div class="header">
+        <h1>秃头大王天天开心</h1>
+        <p>叶舒贝是笨比，大笨比叶舒贝<span class="cherry-blossom">🌸</span></p>
+    </div>
+    
+    <div class="container">
+        <div class="gallery-container">
+            <div class="photo-sphere" id="photoSphere">
+                <!-- 照片将通过JS动态添加 -->
+            </div>
+        </div>
+    </div>
+    
+    <div class="controls">
+        <button class="control-btn" id="autoRotateBtn"><i class="fas fa-sync"></i> 自动旋转</button>
+        <button class="control-btn" id="resetBtn"><i class="fas fa-undo"></i> 重置位置</button>
+        <button class="control-btn" id="cherryEffectBtn"><i class="fas fa-heart"></i> 樱花特效</button>
+        <button class="control-btn" id="addPhotoBtn"><i class="fas fa-plus"></i> 添加照片</button>
+    </div>
+    
+    <div class="instructions">
+        <p><i class="fas fa-mouse"></i> 鼠标拖拽 - 旋转相册</p>
+        <p><i class="fas fa-mouse"></i> 鼠标滚轮 - 缩放大小</p>
+        <p><i class="fas fa-hand-pointer"></i> 点击照片 - 查看大图</p>
+        <p><i class="fas fa-heart heart"></i> 悬停照片 - 显示爱心</p>
+    </div>
+    
+    <div class="modal" id="imageModal">
+        <div class="modal-content">
+            <img src="" alt="Enlarged view" class="modal-img" id="modalImg">
+            <div class="close-btn" id="closeModal"><i class="fas fa-times"></i></div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>樱花飘落浪漫3D相册 | 珍藏美好时光 | 2023</p>
+    </div>
+    
+    <script>
+        // 照片数据 - 替换为您自己的照片URL
+        const photos = [
+            "img/1.jpg",
+            "img/2.jpg",
+            "img/3.jpg",
+            "img/4.jpg",
+            "img/5.jpg",
+            "img/6.jpg",
+            "img/7.jpg",
+            "img/8.jpg",
+            "img/9.jpg",
+            "img/10.jpg",
+            "img/3.jpg",
+            "img/1.jpg"
+        ];
+
+        // 樱花花瓣形状
+        const petals = ["❀", "❁", "✿", "🌸", "🌼", "🌺", "💮", "🏵️"];
+        
+        // 创建樱花飘落效果
+        function createCherryBlossoms() {
+            const container = document.getElementById('cherryBlossoms');
+            const petalCount = 60;
+            
+            for (let i = 0; i < petalCount; i++) {
+                const petal = document.createElement('div');
+                petal.classList.add('petal');
+                
+                // 随机选择花瓣形状
+                const petalShape = petals[Math.floor(Math.random() * petals.length)];
+                petal.innerHTML = petalShape;
+                
+                // 随机位置
+                petal.style.left = `${Math.random() * 100}%`;
+                
+                // 随机大小
+                const size = Math.random() * 24 + 16;
+                petal.style.fontSize = `${size}px`;
+                
+                // 随机旋转
+                const rotate = Math.random() * 360;
+                petal.style.transform = `rotate(${rotate}deg)`;
+                
+                // 随机动画
+                const animationType = Math.floor(Math.random() * 3);
+                const animationDuration = Math.random() * 10 + 15;
+                const animationDelay = Math.random() * 15;
+                
+                if (animationType === 0) {
+                    petal.style.animation = `floatDown ${animationDuration}s linear ${animationDelay}s infinite`;
+                } else if (animationType === 1) {
+                    petal.style.animation = `floatDown2 ${animationDuration}s linear ${animationDelay}s infinite`;
+                } else {
+                    petal.style.animation = `floatDown3 ${animationDuration}s linear ${animationDelay}s infinite`;
+                }
+                
+                container.appendChild(petal);
+            }
+        }
+
+        // 创建3D相册
+        function createPhotoSphere() {
+            const sphere = document.getElementById('photoSphere');
+            const count = photos.length;
+            const radius = 250; // 球体半径
+            
+            // 清空现有照片
+            sphere.innerHTML = '';
+            
+            // 创建照片元素
+            photos.forEach((photo, index) => {
+                const angle = (index / count) * Math.PI * 2;
+                const z = Math.cos(angle) * radius;
+                const y = Math.sin(angle) * radius;
+                
+                const photoElement = document.createElement('div');
+                photoElement.classList.add('photo');
+                photoElement.style.backgroundImage = `url(${photo}?w=400)`;
+                photoElement.style.transform = `rotateY(${angle}rad) translateZ(${z}px) translateY(${y}px)`;
+                
+                // 添加爱心悬停效果
+                const heartOverlay = document.createElement('div');
+                heartOverlay.classList.add('heart-overlay');
+                heartOverlay.innerHTML = '<i class="fas fa-heart heart-icon"></i>';
+                photoElement.appendChild(heartOverlay);
+                
+                // 添加点击事件
+                photoElement.addEventListener('click', (e) => {
+                    openModal(photo);
+                    createLikeHeart(e.clientX, e.clientY);
+                });
+                
+                sphere.appendChild(photoElement);
+            });
+        }
+
+        // 创建点赞爱心动画
+        function createLikeHeart(x, y) {
+            const heart = document.createElement('div');
+            heart.classList.add('like-heart');
+            heart.innerHTML = '❤';
+            heart.style.left = `${x - 12}px`;
+            heart.style.top = `${y - 12}px`;
+            
+            document.body.appendChild(heart);
+            
+            // 动画结束后移除元素
+            setTimeout(() => {
+                heart.remove();
+            }, 1200);
+        }
+
+        // 初始化旋转控制
+        function initRotationControl() {
+            const sphere = document.getElementById('photoSphere');
+            let isDragging = false;
+            let startX, startY;
+            let rotationX = -10;
+            let rotationY = 0;
+            let scale = 1;
+            
+            // 鼠标事件
+            sphere.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                startX = e.clientX;
+                startY = e.clientY;
+            });
+            
+            document.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                
+                const deltaX = e.clientX - startX;
+                const deltaY = e.clientY - startY;
+                
+                rotationY += deltaX * 0.5;
+                rotationX = Math.max(-90, Math.min(90, rotationX - deltaY * 0.3));
+                
+                sphere.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg) scale(${scale})`;
+                
+                startX = e.clientX;
+                startY = e.clientY;
+            });
+            
+            document.addEventListener('mouseup', () => {
+                isDragging = false;
+            });
+            
+            // 触摸事件
+            sphere.addEventListener('touchstart', (e) => {
+                isDragging = true;
+                startX = e.touches[0].clientX;
+                startY = e.touches[0].clientY;
+                e.preventDefault();
+            });
+            
+            document.addEventListener('touchmove', (e) => {
+                if (!isDragging) return;
+                
+                const deltaX = e.touches[0].clientX - startX;
+                const deltaY = e.touches[0].clientY - startY;
+                
+                rotationY += deltaX * 0.5;
+                rotationX = Math.max(-90, Math.min(90, rotationX - deltaY * 0.3));
+                
+                sphere.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg) scale(${scale})`;
+                
+                startX = e.touches[0].clientX;
+                startY = e.touches[0].clientY;
+                e.preventDefault();
+            });
+            
+            document.addEventListener('touchend', () => {
+                isDragging = false;
+            });
+            
+            // 滚轮缩放
+            document.addEventListener('wheel', (e) => {
+                scale += e.deltaY * -0.001;
+                scale = Math.min(Math.max(0.5, scale), 2);
+                sphere.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg) scale(${scale})`;
+            });
+        }
+
+        // 打开模态框
+        function openModal(photoUrl) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImg');
+            
+            modalImg.src = `${photoUrl}?w=1200`;
+            modal.classList.add('active');
+        }
+
+        // 关闭模态框
+        function closeModal() {
+            const modal = document.getElementById('imageModal');
+            modal.classList.remove('active');
+        }
+
+        // 自动旋转功能
+        function setupAutoRotate() {
+            const btn = document.getElementById('autoRotateBtn');
+            const sphere = document.getElementById('photoSphere');
+            let isRotating = false;
+            let rotateInterval;
+            
+            btn.addEventListener('click', () => {
+                isRotating = !isRotating;
+                
+                if (isRotating) {
+                    btn.innerHTML = '<i class="fas fa-pause"></i> 停止旋转';
+                    rotateInterval = setInterval(() => {
+                        const currentTransform = sphere.style.transform;
+                        const match = currentTransform.match(/rotateY\(([-\d.]+)deg\)/);
+                        const currentY = match ? parseFloat(match[1]) : 0;
+                        sphere.style.transform = currentTransform.replace(
+                            /rotateY\([-\d.]+deg\)/, 
+                            `rotateY(${currentY + 1}deg)`
+                        );
+                    }, 50);
+                } else {
+                    btn.innerHTML = '<i class="fas fa-sync"></i> 自动旋转';
+                    clearInterval(rotateInterval);
+                }
+            });
+        }
+
+        // 重置位置
+        function setupResetButton() {
+            const btn = document.getElementById('resetBtn');
+            const sphere = document.getElementById('photoSphere');
+            
+            btn.addEventListener('click', () => {
+                sphere.style.transform = 'rotateX(-10deg) rotateY(0deg) scale(1)';
+            });
+        }
+
+        // 樱花特效按钮
+        function setupCherryEffect() {
+            const btn = document.getElementById('cherryEffectBtn');
+            const container = document.getElementById('cherryBlossoms');
+            
+            btn.addEventListener('click', () => {
+                // 创建额外的樱花花瓣
+                for (let i = 0; i < 15; i++) {
+                    const petal = document.createElement('div');
+                    petal.classList.add('petal');
+                    
+                    // 随机选择花瓣形状
+                    const petalShape = petals[Math.floor(Math.random() * petals.length)];
+                    petal.innerHTML = petalShape;
+                    
+                    // 随机位置
+                    petal.style.left = `${Math.random() * 100}%`;
+                    
+                    // 随机大小
+                    const size = Math.random() * 24 + 16;
+                    petal.style.fontSize = `${size}px`;
+                    
+                    // 随机旋转
+                    const rotate = Math.random() * 360;
+                    petal.style.transform = `rotate(${rotate}deg)`;
+                    
+                    // 随机动画
+                    const animationType = Math.floor(Math.random() * 3);
+                    const animationDuration = Math.random() * 10 + 15;
+                    
+                    if (animationType === 0) {
+                        petal.style.animation = `floatDown ${animationDuration}s linear 0s forwards`;
+                    } else if (animationType === 1) {
+                        petal.style.animation = `floatDown2 ${animationDuration}s linear 0s forwards`;
+                    } else {
+                        petal.style.animation = `floatDown3 ${animationDuration}s linear 0s forwards`;
+                    }
+                    
+                    container.appendChild(petal);
+                    
+                    // 动画结束后移除花瓣
+                    setTimeout(() => {
+                        petal.remove();
+                    }, animationDuration * 1000);
+                }
+                
+                // 按钮反馈
+                btn.innerHTML = '<i class="fas fa-check"></i> 樱花雨';
+                setTimeout(() => {
+                    btn.innerHTML = '<i class="fas fa-heart"></i> 樱花特效';
+                }, 2000);
+            });
+        }
+
+        // 添加照片按钮
+        function setupAddPhoto() {
+            const btn = document.getElementById('addPhotoBtn');
+            
+            btn.addEventListener('click', () => {
+                // 添加随机新照片
+                const newPhotoUrl = `#`;
+                photos.push(newPhotoUrl);
+                createPhotoSphere();
+                
+                // 显示添加成功消息
+                btn.innerHTML = '<i class="fas fa-check"></i> 已添加';
+                setTimeout(() => {
+                    btn.innerHTML = '<i class="fas fa-plus"></i> 添加照片';
+                }, 2000);
+            });
+        }
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            createCherryBlossoms();
+            createPhotoSphere();
+            initRotationControl();
+            setupAutoRotate();
+            setupResetButton();
+            setupCherryEffect();
+            setupAddPhoto();
+            
+            // 关闭模态框
+            document.getElementById('closeModal').addEventListener('click', closeModal);
+            document.getElementById('imageModal').addEventListener('click', (e) => {
+                if (e.target === document.getElementById('imageModal')) {
+                    closeModal();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
